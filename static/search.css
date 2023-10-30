@@ -1,0 +1,86 @@
+
+body{
+    background-color: rgb(162, 160, 160);;
+    background-size: contain;
+    background-repeat: repeat-y;
+}
+nav{
+    display: flex;
+    height: 10vh;
+    justify-content: center;
+    margin: 1em;
+    position: sticky;
+    overflow: hidden;
+    text-align: center;
+    align-items: center;
+}
+nav a{
+    margin-left: -1em ;
+    margin-right: 1em;
+    text-decoration: none;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: rgb(255, 255, 255);
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+a:hover{
+    text-decoration: none;
+}
+a#logo{
+    text-decoration: none;
+    color: white;
+}
+form{
+    display: flex;
+    width: 50%;
+    height: 6vh;
+}
+input[type=text]{
+    border-radius: 30px;
+    padding:0.8em;
+    padding-left: 1em;
+    border: #000 2px solid;
+}
+button[type=submit]{
+    border-radius: 30px;
+    margin-left: 1vw;
+    border: #000 2px solid;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+}
+.card{
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    border: black 2px solid;
+}
+.card-title{
+    font-size: 2rem;
+    font-weight: 700;
+}
+.card-text{
+    overflow: scroll;
+}
+.col-md-4{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.col-md-4 img{
+    max-height: 300px;
+    max-width: 300px;
+}
+#nomatch{
+    margin: 2em;
+    color: white;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+#ai-box{
+    background-color: rgb(217, 219, 220);
+    border-radius: 30px;
+    border: black 2px solid;
+}

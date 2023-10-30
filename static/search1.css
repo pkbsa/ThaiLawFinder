@@ -1,0 +1,43 @@
+nav{
+    padding: 0em 1em;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+body{
+    background-color: #F7F7F8;
+    font-family: 'Sarabun', sans-serif;
+}
+nav a{
+    padding: 1em;
+    font-size: 1.2em;
+    text-decoration: none;
+    color: black;
+}
+.nav-form{
+    flex-grow: 1;
+}
+h6{
+    font-size: 1em;
+}
+.card{
+    max-width: fit-content;
+}
+.col-9 .card{
+    width: 100%;
+    max-width: 100%
+}
+.card p{
+    white-space: pre-line;
+}
+i{
+    color: rgb(42, 109, 225);
+}
+.filter{
+    border: 0;
+    color: #0C6DFD;
+}
+.filter:hover,.filter:active{
+    color: #0C6DFD;
+}

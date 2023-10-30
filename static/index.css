@@ -1,0 +1,61 @@
+nav{
+    padding: 0 1em;
+    background-color: white;
+}
+
+body{
+    background-color: #F7F7F8;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+}
+.container h1{
+    font-size: 2.7rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.container p{
+    font-size: 1em;
+}
+img{
+    object-fit: cover;
+    width: 100%;
+}
+.container .suggest{
+    color: rgb(116, 118, 120);
+    font-size: 0.9em;
+}
+.card{
+    margin: 1.5em 1.5em;
+    padding: 1em;
+}
+.card p {
+    margin: 0;
+}
+.card img{
+    width: 3.5em;
+    padding: 0.5em;
+    background-color: #E7F0FA;
+}
+#logo2{
+    background-color: #0964CC;
+}
+.card .col{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-check-input{
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+.form-check{
+    display: flex;
+    align-items: flex-end;
+    font-family: 'Sarabun', sans-serif;
+}
