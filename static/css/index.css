@@ -28,10 +28,6 @@ img{
     color: rgb(116, 118, 120);
     font-size: 0.9em;
 }
-.card{
-    margin: 1.5em 1.5em;
-    padding: 1em;
-}
 .card p {
     margin: 0;
 }
@@ -43,19 +39,29 @@ img{
 #logo2{
     background-color: #0964CC;
 }
-.card .col{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
 
-.form-check-input{
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-}
 .form-check{
     display: flex;
     align-items: flex-end;
     font-family: 'Sarabun', sans-serif;
+}
+
+.form-control:focus, .form-select:focus {
+    border: 1px solid #DEE2E6;
+    -webkit-box-shadow: none;
+    box-shadow: none!important;
+}
+input[type=text]{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-select{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+nav img{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    margin-bottom: 4px;
 }

@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
+
 # Function to scrape data from a page using BeautifulSoup
 def scrape_data_with_beautifulsoup(page_url):
     try:
@@ -55,12 +56,18 @@ def scrape_data_with_beautifulsoup(page_url):
                 # Find all <li class="text-option"> elements and concatenate them with "|"
                 text_option_elements = li.find_all('li', class_='text-option')
 
-                # Extract and append the concatenated text to the list with a new line if different from the previous text
-                if text_option_elements:
-                    text = ' | '.join([text_element.text.strip() for text_element in text_option_elements])
-                    if text != prev_text:
-                        texts.append(text)
-                        prev_text = text
+                # # Extract and append the concatenated text to the list with a new line if different from the previous text
+                # if text_option_elements:
+                #     text = ' | '.join([text_element.text.strip() for text_element in text_option_elements])
+                #     if text != prev_text:
+                #         texts.append(text)
+                #         prev_text = text
+
+                for text_option_element in text_option_elements:
+                    # Extract all text within the element and concatenate it
+                    text = ' '.join(text_option_element.stripped_strings)
+                    texts.append(text)
+                print(texts)
 
             return titles, details, texts
         else:
@@ -69,6 +76,7 @@ def scrape_data_with_beautifulsoup(page_url):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return None, None, None
+
 
 # Function to save data to a CSV file
 def save_to_csv(file_path, data):
@@ -83,14 +91,14 @@ def save_to_csv(file_path, data):
 base_url = "http://deka.supremecourt.or.th/search/index/"
 
 # Loop through page numbers from 1 to 6580
-for page_number in range(1, 6581):
+for page_number in range(1, 3):
     page_url = f"{base_url}{page_number}"
     scraped_data = scrape_data_with_beautifulsoup(page_url)
 
     if all(scraped_data):  # Check if all values are not None
         non_none_data = [data for data in scraped_data if data is not None]
         data = list(zip(*non_none_data))  # Transpose the list
-        save_to_csv("scraped_data.csv", data)
+        save_to_csv("scraped_data2.csv", data)
         print(f"Data from page {page_number} saved to 'scraped_data.csv'")
     else:
         print(f"No data found on page {page_number}")
