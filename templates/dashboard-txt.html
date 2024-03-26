@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="../static/css/dashboard-html.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="w-80 mb-2" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Step 2 : Convert-txt-to-csv</li>
+            </ol>
+          </nav>
+        <div class="card">
+            <h3 class="pt-2">Convert .txt to .csv</h3>
+            <div class="drop_box">
+                <header>
+                    <h4>Select File here</h4>
+                </header>
+                <p>Files Supported: TXT</p>
+                <input type="file" hidden accept=".txt" id="fileID" name="file" style="display:none;">
+                <button class="my-btn">Choose File</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const dropArea = document.querySelector(".drop_box"),
+            button = dropArea.querySelector("button"),
+            dragText = dropArea.querySelector("header"),
+            input = dropArea.querySelector("input");
+        let file;
+        var filename;
+    
+        button.onclick = () => {
+            input.click();
+        };
+    
+        input.addEventListener("change", function (e) {
+            var fileName = e.target.files[0].name;
+            const fileInput = document.getElementById('fileID');
+    
+            let filedata = `
+    <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+        <div class="form">
+            <h4>${fileName}</h4>
+            <input type="text" name="code" placeholder="ชื่อ ประมวล/พระราชบัญญัติ" required>
+            <input type="file" name="file" style="display:none;" id="fileUpload">
+            <button class="my-btn">Upload</button>
+        </div>
+    </form>`;
+            dropArea.innerHTML = filedata;
+            document.getElementById('fileUpload').files = e.target.files;
+    
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type:'POST',
+                    url: '/upload',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        filedata = `
+                        <p> Converting file </p>
+                            <div id="myProgress">
+                            <div id="myBar"></div>
+                        </div>`
+                        dropArea.innerHTML = filedata;
+                        move();
+                        setTimeout(() => {
+                            filedata = `
+                        <button class="btn btn-success" onclick="window.location.href='/download'">Download CSV</button>`
+                        dropArea.innerHTML = filedata;
+                        }, 2000);
+                       
+                    },
+                    error: function(data) {
+                        alert("Error occurred.");
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        var i = 0;
+function move() {
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("myBar");
+    var width = 1;
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } else {
+        width++;
+        elem.style.width = width + "%";
+      }
+    }
+  }
+}
+    </script>
+
+
+</body>
+
+</html>
