@@ -11,27 +11,59 @@
         <!-- Upload CSV Form -->
         <h3>Upload HTML to ElasticSearch Index</h3>
         
-        <form id="uploadForm" action="/upload-csv" method="post" enctype="multipart/form-data">
-            <div class="input-group mt-3 mb-3">
-                <input type="file" class="form-control" id="csvFile" name="file" accept=".html" required aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+        <form id="uploadForm" action="/upload-html" method="post" enctype="multipart/form-data">
+            <div class="input-group mt-3 mb-3"> 
+                <input type="file" class="form-control" id="file" name="file" accept=".html" required aria-describedby="inputGroupFileAddon04" aria-label="Upload">
               </div>
-            <button type="submit" class="btn btn-success">Upload and Save</button>
+            <button type="submit" class="btn btn-success">Upload and Compile</button>
+            <button type="button" class="btn btn-primary" onclick="uploadCSV()">Upload CSV</button>
+
         </form>
 
-        <!-- CSV Preview Table -->
-        <div id="previewContainer" style="display: none;">
-            <hr>
-            <h2 class="mt-4">CSV Data Preview</h2>
-            <!-- Pagination -->
-            <div id="pagination" class="mt-4 mb-3">
-                <button class="btn btn-primary" onclick="prevPage()">Previous Page</button>
-                <span id="pageInfo" class="mx-2">Page 1 of 1</span>
-                <button class="btn btn-primary" onclick="nextPage()">Next Page</button>
-            </div>
-            <table id="previewTable" class="table">
-                <!-- Preview table content will be added dynamically using JavaScript -->
-            </table>
+        {% if csv_data %}
+        <div id="pagination" class="mt-3 mb-3">
+            <button class="btn btn-primary" onclick="prevPage()">Previous</button>
+            <span id="currentPage">1</span>
+            /
+            <span id="totalPages">1</span>
+            <button class="btn btn-primary" onclick="nextPage()">Next</button>
         </div>
+
+        <!-- CSV Preview Table -->
+        <table class="table" id="csvTable">
+            <thead>
+                <tr>
+                    <th>{{ csv_data[0][0]}}</th>
+                    <th>{{ csv_data[0][1]}}</th>
+                    <th>{{ csv_data[0][2]}}</th>
+                    <th>{{ csv_data[0][3]}}</th>
+                    <th>{{ csv_data[0][4]}}</th>
+                    <th>{{ csv_data[0][5]}}</th>
+                    <th>{{ csv_data[0][6]}}</th>
+                    <th>{{ csv_data[0][7]}}</th>
+                    <th>{{ csv_data[0][8]}}</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in csv_data[1:] %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                        <td>{{ row[6] }}</td>
+                        <td>{{ row[7] }}</td>
+                        <td>{{ row[8] }}</td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
     
     </div>
         
@@ -41,83 +73,77 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <script>
-        var currentPage = 1;
-        var rowsPerPage = 10;
-        var totalRows = 0;
-        var data = [];
+        function uploadCSV() {
+            // Get the CSV data from the table
+            const csvData = tableToCSV(document.getElementById('csvTable'));
+            // Create a Blob object to hold the CSV data
+            const blob = new Blob([csvData], { type: 'text/csv' });
 
-        // document.getElementById('csvFile').addEventListener('change', function () {
-        //     previewCSV();
-        // });
+            // Create a FormData object and append the Blob
+            const formData = new FormData();
+            formData.append('file', blob, 'csv_data.csv');
 
-        function previewCSV() {
-            var input = document.getElementById('csvFile');
-            var file = input.files[0];
-
-            if (file) {
-                Papa.parse(file, {
-                    complete: function(results) {
-                        data = results.data;
-                        totalRows = data.length;
-
-                        displayPage(currentPage);
-                        document.getElementById('previewContainer').style.display = 'block';
-                    }
-                });
-            }
+            // Use fetch to send the FormData to the server
+            fetch('/upload-csv', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to upload CSV');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle success, if needed
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle error, if needed
+                console.error(error);
+            });
         }
 
-        function displayPage(page) {
-            var table = document.getElementById('previewTable');
-            table.innerHTML = '';
-
-            var startIndex = (page - 1) * rowsPerPage;
-            var endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-
-            // Add the header row
-            if (data.length > 0) {
-                var headerRow = table.insertRow(0);
-
-                for (var h = 0; h < data[0].length; h++) {
-                    var headerCell = headerRow.insertCell(-1);
-                    headerCell.innerHTML = data[0][h];
-                }
+       
+    </script>
+    
+    <script>
+        // JavaScript for pagination
+        const itemsPerPage = 10;
+        let currentPage = 1;
+    
+        function showPage(pageNumber) {
+            const tableRows = document.querySelectorAll('#csvTable tbody tr');
+            const totalPages = Math.ceil(tableRows.length / itemsPerPage);
+            
+            // Update current page and total pages in the UI
+            currentPage = Math.min(Math.max(1, pageNumber), totalPages);
+            document.getElementById('currentPage').textContent = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+    
+            // Hide all rows
+            tableRows.forEach(row => row.style.display = 'none');
+    
+            // Calculate start and end indices for the current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(currentPage * itemsPerPage, tableRows.length);
+    
+            // Show rows for the current page
+            for (let i = startIndex; i < endIndex; i++) {
+                tableRows[i].style.display = '';
             }
-
-            for (var i = startIndex + 1; i < endIndex; i++) {
-                var cells = data[i];
-                var row = table.insertRow(-1);
-
-                for (var j = 0; j < cells.length; j++) {
-                    var cell = row.insertCell(-1);
-
-                    // Limit the "detail" column to 30 characters and add ellipsis if needed
-                    if (j === 7 && cells[j].length > 30) {
-                        cell.innerHTML = cells[j].substring(0, 30) + '...';
-                        cell.setAttribute('title', cells[j]); // Add title attribute for full text on hover
-                    } else {
-                        cell.innerHTML = cells[j];
-                    }
-                }
-            }
-
-            document.getElementById('pageInfo').textContent = 'Page ' + page + ' of ' + Math.ceil(totalRows / rowsPerPage);
         }
-
+    
         function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                displayPage(currentPage);
-            }
+            showPage(currentPage - 1);
         }
-
+    
         function nextPage() {
-            var totalPages = Math.ceil(totalRows / rowsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayPage(currentPage);
-            }
+            showPage(currentPage + 1);
         }
+    
+        // Show the initial page when the page loads
+        showPage(currentPage);
     </script>
 </body>
 </html>
