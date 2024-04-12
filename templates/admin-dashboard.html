@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+
+    <!-- Add Bootstrap CSS link here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard"> <img src="../static/img/logo.png">
+                Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                 
+                    
+
+                </ul>
+                <form method="GET" action="{{ url_for('search') }}">
+                    <div class="row ">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="col-4"> <!-- Adjust the column width as needed -->
+                                    <select class="form-select me-2" id="inputGroupSelect02">
+                                        <option selected value="1">ประมวลกฎหมาย / พรบ.</option>
+                                        <option value="2">คำพิพากษา</option>
+                                    </select>
+                                </div>
+                                <div class="col"> <!-- Adjust the column width as needed -->
+                                    <input type="text" name="keyword" class="form-control"
+                                        placeholder="Section, Keyword...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+
+        <div class="col-2 sidebar">
+            <ul class="nav flex-column p-4">
+                <li class="nav-item">
+                    <span class="m-2 nav-head">Dashboards</span>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Dashboard</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item mt-3">
+                    <span class="m-2 nav-head">Pagination</span>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.ocs.go.th/council-of-state/#/public/browse">Krisdika</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item mt-3">
+                    <span class="m-2 nav-head">Features</span>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin-convert">Convert File</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin-upload">Upload Information</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-10">
+            <div class="container mt-4">
+                <div class="card p-4">
+                    <h2>Welcome to Dashboard</h2>
+                    <p id="greet">Hello Administator, welcome to ThaiLawFinder admin dashboard!</p>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body row p-3">
+                                <div class="col-8">
+                                    <h5>ประมวลกฎหมาย</h5>
+                                    <p class="subdetail">Legal Codes</p>
+                                </div>
+                                <div class="col-4 text-end d-flex align-items-center justify-content-end">
+                                    <p class="number">8</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body row p-3">
+                                <div class="col-8">
+                                    <h5>พระราชบัญญัติ</h5>
+                                    <p class="subdetail">Act of Legislation</p>
+                                </div>
+                                <div class="col-4 text-end d-flex align-items-center justify-content-end">
+                                    <p class="number">25</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body row p-3">
+                                <div class="col-8">
+                                    <h5>คำพิพากษาศาลฎีฏา</h5>
+                                    <p class="subdetail">Supreme Court Judgement</p>
+                                </div>
+                                <div class="col-4 text-end d-flex align-items-center justify-content-end">
+                                    <p class="number">325</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-4">
+                        <div class="card p-4 h-100">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-4 row justify-content-space-between">
+                        <div class="card p-4 update">
+                            <p id="update">ไฟล์ที่ต้อง Update !!!</p>
+                            <textarea class="form-control h-100 mt-2" placeholder="" id="floatingTextarea2" disabled style="height: 100px"></textarea>
+                        </div>
+                        <div class="card p-4 mt-2">
+                            <button onclick='window.location.href="https://www.ocs.go.th/council-of-state/#/public/browse"' class="step" style="background-color: #8F9FB8;">STEP 1 : GET LAW INFORMATION</button>
+                        </div>
+                        <div class="card p-4 mt-2">
+                            <button onclick='window.location.href="/admin-convert"' class="step" style="background-color: #1265EE;">STEP 2 : CONVERT FILE</button>
+                        </div>
+                        <div class="card p-4 mt-2">
+                            <button onclick='window.location.href="/admin-upload"' class="step" style="background-color: #2BCE89;">STEP 3 : UPLOAD INFORMATION</button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="card mt-4 p-2 mb-4">
+
+                    <!-- Upload CSV Form -->
+                    <table class="table table-striped table-hover" id="codes">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">มาตรา</th>
+                                <th scope="col">ฉบับ</th>
+                                <th scope="col">สถานะ</th>
+                                <th scope="col">ประกาศใช้</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for code in codes %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ code.key }}</td>
+                                <td>{{ code.doc_count }}</td>
+                                <td>
+
+                                    <div class="spinner-border text-secondary spinner-border-sm" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="spinner-border text-secondary spinner-border-sm" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="spinner-border text-secondary spinner-border-sm" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form action="/delete" method="post">
+                                        <input type="hidden" name="code" value="{{ code.key }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">CSV Data Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="previewTable" class="table">
+                        <!-- Preview table content will be added dynamically using JavaScript -->
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js scripts here -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function previewCSV() {
+            var input = document.getElementById('csvFile');
+            var file = input.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.readAsText(file);
+
+                reader.onload = function (e) {
+                    var csvData = e.target.result;
+                    var rows = csvData.split('\n');
+                    var table = document.getElementById('previewTable');
+                    table.innerHTML = '';
+
+                    for (var i = 0; i < Math.min(rows.length, 5); i++) {
+                        var cells = rows[i].split(',');
+                        var row = table.insertRow(-1);
+
+                        for (var j = 0; j < cells.length; j++) {
+                            var cell = row.insertCell(-1);
+                            cell.innerHTML = cells[j];
+                        }
+                    }
+
+                    // Show the modal
+                    $('#previewModal').modal('show');
+                };
+            }
+        }
+    </script>
+    <script>
+        window.onload = async function () {
+            await updateTableData();
+        };
+
+        async function updateTableData() {
+            const table = document.getElementById('codes');
+            const rows = table.rows;
+
+            for (let i = 1; i < rows.length; i++) { // start from 1 to skip the header row
+                const cells = rows[i].cells;
+                const name = cells[1].textContent; // assuming name is in the second column
+                const copyCell = cells[3];
+                const statusCell = cells[4];
+                const dateCell = cells[5];
+
+
+                const dataFromDatabase = await getDataFromDatabase(name);
+                console.log(dataFromDatabase);
+
+                if (dataFromDatabase) {
+                    copyCell.textContent = dataFromDatabase.copy;
+                    statusCell.textContent = dataFromDatabase.status;
+                    dateCell.textContent = dataFromDatabase.date;
+                    if (dataFromDatabase.currentStatus == 1) {
+                        cells[1].innerHTML = `<span class="badge text-bg-success m-1">ฉบับล่าสุด</span>
+` + cells[1].innerHTML;
+                    } else {
+                        cells[1].innerHTML = `<span class="badge text-bg-warning m-1">ฉบับเก่า</span>` + cells[1].innerHTML;
+                    }
+
+                }
+            }
+
+        }
+
+        async function getDataFromDatabase(name) {
+            const response = await fetch(`/info/${name}`);
+            const data = await response.json();
+            if (data.results == null) {
+                return null;
+            } else {
+                return {
+                    copy: data.results[2],
+                    status: data.results[3],
+                    date: data.results[4],
+                    currentStatus: data.results[5],
+                };
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const data = {
+            labels: [
+                'ประมวลกฎหมาย',
+                'พระราชบัญญัติ',
+                'คำพิพากษาศาลฎีฏา'
+            ],
+            datasets: [{
+                data: [8, 25, 130],
+                backgroundColor: [
+                    'rgb(255, 205, 86)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'polarArea',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

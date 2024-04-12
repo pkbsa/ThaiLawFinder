@@ -1,0 +1,105 @@
+nav{
+    padding: 0 1em;
+    background-color: #FBFBFC!important;
+}
+
+body{
+    background-color: #F5F6F7!important;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+}
+.container h1{
+    font-size: 2.7rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.container p{
+    font-size: 1em;
+}
+img{
+    object-fit: cover;
+    width: 100%;
+}
+.container .suggest{
+    color: rgb(116, 118, 120);
+    font-size: 0.9em;
+}
+.card p {
+    margin: 0;
+}
+.card img{
+    width: 3.5em;
+    padding: 0.5em;
+    background-color: #E7F0FA;
+}
+#logo2{
+    background-color: #0964CC;
+}
+
+.form-check{
+    display: flex;
+    align-items: flex-end;
+    font-family: 'Sarabun', sans-serif;
+}
+
+.form-control:focus, .form-select:focus {
+    border: 1px solid #DEE2E6;
+    -webkit-box-shadow: none;
+    box-shadow: none!important;
+}
+input[type=text]{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-select{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+nav img{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    margin-bottom: 4px;
+}
+
+#greet{
+    color: rgb(96, 96, 96);
+}
+
+p.number{
+    font-size: 25px;
+}
+p.subdetail{
+    color: rgb(116, 118, 120);
+    font-size: 0.9em;
+}
+.sidebar{
+    background-color: white;
+}
+
+.nav-head{
+    font-weight: 600;
+    color: #3E68D5;
+}
+a.nav-link{
+    color: black;
+    font-weight: 500;
+}
+#update{
+    font-weight: 800;
+    font-size: 18px;
+}
+.update{
+    min-height: 220px!important;
+}
+.step{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border: 0;
+    color: rgb(255, 255, 255);
+}

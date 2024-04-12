@@ -9,7 +9,7 @@
 }
 
 .container {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   align-items: center;
   display: flex;
@@ -66,6 +66,15 @@
   outline: none;
   transition: 0.3s;
 }
+.my-red-btn {
+  text-decoration: none;
+  background-color: #da3333;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  transition: 0.3s;
+}
 
 .my-btn:hover{
   text-decoration: none;
@@ -94,4 +103,15 @@
   width: 1%;
   height: 30px;
   background-color: green;
+}
+
+#previewContainer{
+  max-height: 400px;
+  max-width: 100%;
+  overflow: scroll;
+  font-size: 0.7em;
+}
+
+#pagination, #pagination .btn{
+  font-size: 0.9em;
 }

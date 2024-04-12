@@ -1,19 +1,17 @@
 import csv
 from io import StringIO, TextIOWrapper
 from flask import Flask, jsonify, redirect, request, url_for
-from markupsafe import escape
 from flask import render_template
 from elasticsearch import Elasticsearch
 import math
+import time
 
-import csv
-from bs4 import BeautifulSoup
-from scraper_code import newTxtToCSV
+
 from flask import send_file
 import mysql.connector
 
-
-
+from scraper_code import newTxtToCSV
+from advancedSearchData import content
 
 ELASTIC_PASSWORD = ""
 existing_index_name = 'law-data-reindex-1'
@@ -67,7 +65,7 @@ def search():
                         {'match': {'title': keyword}},
                         {'match': {'chapter': keyword}},
                         {'match': {'part': keyword}},
-                        {'match': {'additional': keyword}},
+                        {'match': {'addtitional': keyword}},
                         {'match': {'detail': keyword}}
                     ]
                 }
@@ -172,7 +170,7 @@ def dashboard():
 
     codes = get_codes(es, existing_index_name)
     
-    return render_template('dashboard.html', codes=codes, law_data=law_data)
+    return render_template('admin-dashboard.html', codes=codes, law_data=law_data)
 
 @app.route('/info/<name>')
 def get_status(name):
@@ -183,13 +181,13 @@ def get_status(name):
     db.close()
     return {'results': status}
 
-@app.route('/dashboard-csv')
-def dashboardCSV():
-    return render_template('dashboard-csv.html')
-
-@app.route('/dashboard-txt')
+@app.route('/admin-convert')
 def dashboardHTML():
-    return render_template('dashboard-txt.html')
+    return render_template('admin-convert.html')
+
+@app.route('/admin-upload')
+def dashboardCSV():
+    return render_template('admin-upload.html')
 
 def delete_data_by_code(es, index_name, code):
     es.delete_by_query(index=index_name, body={"query": {"match": {"code.raw": code}}})
@@ -199,12 +197,24 @@ def delete_data():
     try:
         code_to_delete = request.form.get('code')
         delete_data_by_code(es, existing_index_name, code_to_delete)
+        db = connect_to_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM law WHERE name = %s", (code_to_delete,))
+        db.commit() 
+        db.close()
+        content.removeContent(code_to_delete)
+        time.sleep(1)
+
         return redirect(url_for('dashboard'))
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
 def add_csv_to_index(es, index_name, csv_data):
+    reader = csv.DictReader(StringIO(csv_data))
+    if csv_data.startswith('\ufeff'):
+        csv_data = csv_data[1:]
+    
     reader = csv.DictReader(StringIO(csv_data))
     
     documents = []
@@ -219,30 +229,58 @@ def add_csv_to_index(es, index_name, csv_data):
             'addtitional': row['addtitional'],
             'detail': row['detail'],
             'section_sort': row['section_sort']
-            # Add more fields as needed
         }
        
         es.index(index=index_name, doc_type='_doc', body=document)
-        
-@app.route('/upload-csv', methods=['POST'])
-def upload_csv():
-    uploaded_file = request.files['file']
-    csv_data = uploaded_file.stream.read().decode('utf-8')
-    add_csv_to_index(es, existing_index_name, csv_data)
-    return redirect(url_for('dashboard'))
-
-@app.route('/upload-html', methods=['GET'])
-def redirect_html():
-    return redirect(url_for('dashboardHTML'))
 
 @app.route('/upload', methods=['POST'])
-def upload_file():
+def convert_txt_to_csv():
     code = request.form.get('code')
     file = request.files['file']
     file.save('static/input.txt')
     newTxtToCSV.process_file(code)  
     return 'File processed successfully', 200
 
+# @app.route('/upload-csv', methods=['POST'])
+# def upload_file_csv():
+#     uploaded_file = request.files['file']
+
+#     csv_data = uploaded_file.stream.read().decode('utf-8')
+#     add_csv_to_index(es, existing_index_name, csv_data)
+
+#     return 'File uploaded and data inserted into database/elastic successfully'
+
+@app.route('/upload-test', methods=['POST'])
+def upload_csv():
+    if request.method == 'POST':
+        name = request.form['name']
+        copy = request.form['copy']
+        status = request.form['status']
+        date = request.form['date']
+        url = request.form['url']
+        currentStatus = 1
+        
+        db = connect_to_db()
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO law (name, copy, status, date, url, currentStatus) VALUES (%s, %s, %s, %s, %s, %s)", (name, copy, status, date, url, currentStatus))
+        db.commit()
+
+        # Check if the data was inserted successfully
+        if cursor.rowcount == 0:
+            db.close()
+            return 'Error: Data was not inserted into database'
+
+        db.close()
+
+        uploaded_file = request.files['file']
+        csv_data = uploaded_file.stream.read().decode('utf-8')
+        add_csv_to_index(es, existing_index_name, csv_data)
+
+        content.addContent(csv_data)
+
+        return 'File uploaded and data inserted into database/elastic successfully'
+
+
 @app.route('/download')
 def download_file():
-    return send_file('static/output-new.csv', as_attachment=True)
+    return send_file('static/output.csv', as_attachment=True)
