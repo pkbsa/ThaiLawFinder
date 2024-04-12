@@ -10,8 +10,8 @@ import time
 from flask import send_file
 import mysql.connector
 
-from scraper_code import newTxtToCSV
-from advancedSearchData import content
+from features import converter
+from features import content
 
 ELASTIC_PASSWORD = ""
 existing_index_name = 'law-data-reindex-1'
@@ -233,24 +233,15 @@ def add_csv_to_index(es, index_name, csv_data):
        
         es.index(index=index_name, doc_type='_doc', body=document)
 
-@app.route('/upload', methods=['POST'])
+@app.route('/convert', methods=['POST'])
 def convert_txt_to_csv():
     code = request.form.get('code')
     file = request.files['file']
     file.save('static/input.txt')
-    newTxtToCSV.process_file(code)  
+    converter.process_file(code)  
     return 'File processed successfully', 200
 
-# @app.route('/upload-csv', methods=['POST'])
-# def upload_file_csv():
-#     uploaded_file = request.files['file']
-
-#     csv_data = uploaded_file.stream.read().decode('utf-8')
-#     add_csv_to_index(es, existing_index_name, csv_data)
-
-#     return 'File uploaded and data inserted into database/elastic successfully'
-
-@app.route('/upload-test', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_csv():
     if request.method == 'POST':
         name = request.form['name']
