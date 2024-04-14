@@ -22,6 +22,7 @@ pip install -r requirements.txt
 ## Usage
 
 1. Set environment variables:
+
 Linux : 
 ```
 export FLASK_APP=search_app.py
