@@ -1,4 +1,5 @@
 {
+    "version": 2,
     "builds": [
         {
             "src": "./search_app.py",
@@ -8,7 +9,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "./search_app.py"
+            "dest": "search_app.py"
         }
     ]
 }
