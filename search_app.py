@@ -13,19 +13,36 @@ import mysql.connector
 from features import converter
 from features import content
 
-ELASTIC_PASSWORD = ""
-existing_index_name = 'law-data-reindex-1'
+# ELASTIC_PASSWORD = ""
 
-es = Elasticsearch("http://localhost:9200",
-                   http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
+# existing_index_name = 'law-data-reindex-1'
+
+# es = Elasticsearch("http://localhost:9200",
+#                  http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
+
+ELASTIC_PASSWORD = "ppfBW5a5bFGDw7W7v0QqgsdC"
+
+existing_index_name = 'law-data-reindex'
+
+es = Elasticsearch(['https://97652710d0b74c249f19a27b3ef4a111.ap-southeast-1.aws.found.io:443'], http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
+
 app = Flask(__name__)
+
+# def connect_to_db():
+#     db = mysql.connector.connect(
+#         host="localhost",
+#         user="root",
+#         password="",
+#         database="thailawfinder"
+#     )
+#     return db
 
 def connect_to_db():
     db = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="thailawfinder"
+        host="db4free.net",
+        user="netgluayadmin",
+        password="netgluay",
+        database="netgluaydb"
     )
     return db
 

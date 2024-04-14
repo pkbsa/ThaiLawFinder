@@ -53,7 +53,7 @@ def addContent(csv_data) :
 
 def removeContent(input_string) :
     js_file = 'static/js/data.js'
-    txt_file = 'advancedSearchData/data.txt'
+    txt_file = 'static/js/data.txt'
 
     # Rename the .js file to .txt
     os.rename(js_file, txt_file)
