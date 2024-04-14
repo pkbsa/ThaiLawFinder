@@ -22,10 +22,18 @@ pip install -r requirements.txt
 ## Usage
 
 1. Set environment variables:
+Linux : 
 ```
 export FLASK_APP=search_app.py
 export FLASK_ENV=development
 export FLASK_DEBUG=1
+```
+
+Window
+```
+set FLASK_APP=search_app.py
+set FLASK_ENV=development
+set FLASK_DEBUG=1
 ```
 
 2. Run the application:
