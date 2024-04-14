@@ -6,13 +6,15 @@ from elasticsearch import Elasticsearch
 import math
 import time
 
-
 from flask import send_file
 import mysql.connector
 
 from features import converter
 from features import content
 
+from pythainlp.tokenize import word_tokenize
+from gensim.models import KeyedVectors
+model = KeyedVectors.load_word2vec_format('pythainlp_model/thai2vec.bin',binary=True)
 # ELASTIC_PASSWORD = ""
 
 # existing_index_name = 'law-data-reindex-1'
@@ -46,6 +48,25 @@ def connect_to_db():
     )
     return db
 
+def findSimilarity(sentence):
+    cutedSentence = word_tokenize(sentence, engine='deepcut')
+    # print('cutedSentence:', cutedSentence)
+    choiceWord = []
+    for i in cutedSentence:
+        try:
+            similar = model.most_similar_cosmul(positive=["คดี","กฎหมาย",i], negative=[])
+        except:
+            similar=[]
+        count=0
+        for l, k in similar:
+            # print(l, k)
+            if k > 0.22 and count <=3 and l not in choiceWord:
+                choiceWord.append(l)
+                count+=1
+        # print("-----")
+    # print("choiceWord", choiceWord)
+    return choiceWord
+
 
 @app.route('/')
 def index():
@@ -59,7 +80,7 @@ def search():
     page_no = int(request.args.get('page', 1))
     sort = request.args.get('sort', 'section')
     order = request.args.get('order', 'asc')
-
+    choiceWord = findSimilarity(keyword)
     if not keyword.strip() :
         body = {
             'size': page_size,
@@ -101,7 +122,7 @@ def search():
 
     page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total)
+    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total, choiceWord=choiceWord)
 
 
 @app.route('/advanced-search')
