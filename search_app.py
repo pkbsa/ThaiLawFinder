@@ -107,6 +107,7 @@ def search():
 @app.route('/advanced-search')
 def advancedSearch():
     page_size = 5
+    keyword = request.args.get('keyword')
     section = request.args.get('section')
     code = request.args.get('code')
     book = request.args.get('book')
@@ -128,7 +129,6 @@ def advancedSearch():
         should_conditions.append({"match_phrase": {"code": code}})
     else :
         should_conditions.append({"match_all": {}})
-
     if book and book.strip() and book != 'None' and book != '-':
         should_conditions.append({"match": {"book": book}})
     if title and title.strip() and title != 'None' and title != '-':
@@ -137,6 +137,9 @@ def advancedSearch():
         should_conditions.append({"match_phrase": {"chapter": chapter}})
     if section:
         should_conditions.append({"match": {"section": section}})
+
+    if keyword and keyword.strip():
+        should_conditions.append({"match": {"detail": keyword}})
 
     print(should_conditions)
 
