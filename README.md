@@ -6,7 +6,7 @@ ThaiLawFinder is a web application designed to facilitate searching and browsing
 
 1. Clone the repository:
 ```
-git clone https://github.com/pkbsa/ThaiLawFinder.git\
+git clone https://github.com/pkbsa/ThaiLawFinder.git
 ```
 
 2. Navigate to the project directory:
