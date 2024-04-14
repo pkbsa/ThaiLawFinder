@@ -80,15 +80,15 @@
                     </div>
                 </div>
 
-                <input type="text" name="name" placeholder="ชื่อ ประมวล/พระราชบัญญัติ" required>
-                <input type="text" name="copy" placeholder="ฉบับ" required>
-                <input type="text" name="status" placeholder="สถานะ" required>
+                <input type="text" name="name" placeholder="ชื่อ ประมวล/พระราชบัญญัติ" value="" required>
+                <input type="text" name="copy" placeholder="ฉบับ" value="ฉบับปรับปรุงล่าสุด" required>
+                <input type="text" name="status" placeholder="สถานะ" value="ยังมีผลใช้บังคับ" required>
                 <input type="text" name="date" placeholder="วันที่ประกาศ" required>
                 <input type="text" name="url" placeholder="url" required>
 
                 <input type="file" name="file" style="display:none;" id="fileUpload">
                 <div id="nextDiv" class="text-center mt-2">
-                    <button class="my-red-btn">Choose Other File</button>
+                    <button type="button" onclick="window.location.href='/admin-upload'" class="my-red-btn">Choose Other File</button>
                     <button class="my-btn" type="submit">Upload</button>
                 </div>
                 
@@ -106,7 +106,7 @@
                 var formData = new FormData(this);
                 $.ajax({
                     type: 'POST',
-                    url: '/upload-test',
+                    url: '/upload',
                     data: formData,
                     cache: false,
                     contentType: false,
@@ -128,6 +128,7 @@
                     },
                     error: function (data) {
                         alert("Error occurred.");
+                        console.log(data);
                     }
                 });
             });
@@ -201,7 +202,10 @@
 
                 for (var j = 0; j < cells.length; j++) {
                     var cell = row.insertCell(-1);
-
+                    if( j==0 ) {
+                        var inputElement = document.getElementsByName('name')[0];
+                        inputElement.value = cells[j];
+                    }
                     // Limit the "detail" column to 30 characters and add ellipsis if needed
                     if (j === 7 && cells[j].length > 30) {
                         cell.innerHTML = cells[j].substring(0, 30) + '...';

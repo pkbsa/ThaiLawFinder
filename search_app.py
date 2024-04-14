@@ -276,7 +276,10 @@ def upload_csv():
         # Check if the data was inserted successfully
         if cursor.rowcount == 0:
             db.close()
+            print('Error: Data was not inserted into database')
             return 'Error: Data was not inserted into database'
+        else:
+            print('Data inserted into database successfully')
 
         db.close()
 
