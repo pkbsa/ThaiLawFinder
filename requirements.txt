@@ -7,7 +7,7 @@ click==8.1.7
 deepcut==0.7.0.0
 elasticsearch==5.5.3
 Flask==3.0.3
-gensim==4.2.0
+gensim==4.3.2
 h11==0.14.0
 idna==3.7
 itsdangerous==2.1.2
