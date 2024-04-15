@@ -106,6 +106,21 @@
                         </div>
                     </form>
                 </div>
+                <div class="card w-100 mb-3 mt-3 ">
+                    <div class="card-body">
+                        <h5 class="card-title">Suggestion:</h5>
+                        {% if choiceWord|length == 0 %}
+                        <div class="input-group mt-3 mb-3">
+                            <span class="input-group-text">ไม่พบคำใกล้เคียง</span>
+                        </div>
+                        {% endif %}
+                        {% for doc in choiceWord %}
+                        <div class="input-group mt-3 mb-3">
+                            <span class="input-group-text">{{ doc }}</span>
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
             </div>
             <div class="col-sm-12 col-md-8 col-lg-9">
                 <div class="d-flex justify-content-end mb-3 mt-3">
