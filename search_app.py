@@ -20,9 +20,10 @@ model_path = 'pythainlp_model/thai2vec.bin'
 
 # model = load_word2vec_format(model_path, binary=True)
 
-from gensim.models import KeyedVectors
-model = KeyedVectors.load_word2vec_format(model_path,binary=True)
-
+# from gensim.models import KeyedVectors
+# model = KeyedVectors.load_word2vec_format(model_path,binary=True)
+from pythainlp import word_vector
+model = word_vector.WordVector(model_name="thai2fit_wv").get_model()
 # ELASTIC_PASSWORD = ""
 
 # existing_index_name = 'law-data-reindex-1'
