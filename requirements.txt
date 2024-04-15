@@ -11,5 +11,5 @@ webdriver_manager==4.0.1
 gensim==4.3.2
 pythainlp==5.0.2
 deepcut==0.7.0.0
-numpy==1.24.3
+# numpy==1.24.3
 # scipy==1.9.2
