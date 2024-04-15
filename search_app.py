@@ -12,10 +12,16 @@ import mysql.connector
 
 from features import converter
 from features import content
-
 from pythainlp.tokenize import word_tokenize
+model_path = 'pythainlp_model/thai2vec.bin'
+
+# from gensim.models import load_word2vec_format
+# import fasttext
+
+# model = load_word2vec_format(model_path, binary=True)
+
 from gensim.models import KeyedVectors
-model = KeyedVectors.load_word2vec_format('pythainlp_model/thai2vec.bin',binary=True)
+model = KeyedVectors.load_word2vec_format(model_path,binary=True)
 
 # ELASTIC_PASSWORD = ""
 
