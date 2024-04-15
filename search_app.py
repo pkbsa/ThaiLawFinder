@@ -12,18 +12,7 @@ import mysql.connector
 
 from features import converter
 from features import content
-from pythainlp.tokenize import word_tokenize
-model_path = 'pythainlp_model/thai2vec.bin'
 
-# from gensim.models import load_word2vec_format
-# import fasttext
-
-# model = load_word2vec_format(model_path, binary=True)
-
-# from gensim.models import KeyedVectors
-# model = KeyedVectors.load_word2vec_format(model_path,binary=True)
-from pythainlp import word_vector
-model = word_vector.WordVector(model_name="thai2fit_wv").get_model()
 # ELASTIC_PASSWORD = ""
 
 # existing_index_name = 'law-data-reindex-1'
@@ -57,25 +46,6 @@ def connect_to_db():
     )
     return db
 
-def findSimilarity(sentence):
-    cutedSentence = word_tokenize(sentence, engine='deepcut')
-    # print('cutedSentence:', cutedSentence)
-    choiceWord = []
-    for i in cutedSentence:
-        try:
-            similar = model.most_similar_cosmul(positive=["คดี","กฎหมาย",i], negative=[])
-        except:
-            similar=[]
-        count=0
-        for l, k in similar:
-            # print(l, k)
-            if k > 0.22 and count <=3 and l not in choiceWord:
-                choiceWord.append(l)
-                count+=1
-        # print("-----")
-    # print("choiceWord", choiceWord)
-    return choiceWord
-
 
 @app.route('/')
 def index():
@@ -89,7 +59,7 @@ def search():
     page_no = int(request.args.get('page', 1))
     sort = request.args.get('sort', 'section')
     order = request.args.get('order', 'asc')
-    choiceWord = findSimilarity(keyword)
+
     if not keyword.strip() :
         body = {
             'size': page_size,
@@ -131,7 +101,7 @@ def search():
 
     page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total, choiceWord=choiceWord)
+    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total)
 
 
 @app.route('/advanced-search')
