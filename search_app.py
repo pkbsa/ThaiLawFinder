@@ -176,9 +176,9 @@ def advancedSearch():
 
         page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total)
+        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword)
     else:
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total)
+        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword)
 
 
 def get_codes(es, index_name):

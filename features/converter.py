@@ -146,11 +146,19 @@ def process_file(param_code):
                             pending_replacements['chapter'] = add_brackets_around_number(parts[0].strip())
                             pending_replacements['part'] = add_brackets_around_number(parts[1].strip())
 
-            elif '\nลักษณะที่ ' in detail or '\nลักษณะ ' in detail:
-                parts = detail.split('\nลักษณะที่', 1) if '\nลักษณะที่' in detail else detail.split('\nลักษณะ', 1)
-                detail = parts[0]
-                pending_replacements['title'] = add_brackets_around_number(parts[1].strip())
-                pending_replacements['chapter'] = '-'
+            elif '\nลักษณะที่ ' in detail or '\nลักษณะ ' in detail or '\nบทเฉพาะกาล' in detail:
+                if '\nลักษณะที่' in detail:
+                    parts = detail.split('\nลักษณะที่', 1)
+                    pending_replacements['title'] = add_brackets_around_number(parts[1].strip())
+                    pending_replacements['chapter'] = '-'
+                elif '\nลักษณะ' in detail:
+                    parts = detail.split('\nลักษณะ', 1)
+                    pending_replacements['title'] = add_brackets_around_number(parts[1].strip())
+                    pending_replacements['chapter'] = '-'
+                elif '\nบทเฉพาะกาล' in detail:
+                    parts = detail.split('\nบทเฉพาะกาล', 1)
+                    pending_replacements['title'] = '-'
+                    pending_replacements['chapter'] = 'บทเฉพาะกาล'
                 pending_replacements['part'] = '-'
                 pending_replacements['addtitional'] = '-'
                 if '\nหมวดที่ ' in parts[1] or '\nหมวด ' in parts[1]:

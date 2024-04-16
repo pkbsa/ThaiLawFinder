@@ -97,6 +97,15 @@
 
                         <div class="card-body">
                             <h5 class="card-title">Search By มาตรา</h5>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="code">ประมวล</label>
+                                <select class="form-select" id="codesearch" name="code">
+                                    <option value="อาญา">อาญา</option>
+                                    <option value="แพ่ง">แพ่ง</option>
+                                </select>
+                            </div>
+
                             <div class="input-group mt-3 mb-3">
                                 <span class="input-group-text">มาตรา</span>
                                 <input type="text" class="form-control" name="section" required>
@@ -170,33 +179,42 @@
             </div>
             <div aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    {% if page_no!=1 %}
+                    {% if page_no != 1 %}
                     <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page=1">First</a></li>
                     <li class="page-item">
-                        <a class="page-link" href="?keyword={{ keyword }}&page={{ page_no-1 }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                        <a class="page-link" href="?keyword={{ keyword }}&page={{ page_no - 1 }}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_no-1 }}">{{
-                            page_no-1
-                            }}</a></li>
                     {% endif %}
-                    {% if page_total>1 %}
-
-                    <li class="page-item active"><a class="page-link " href="#">{{ page_no }}</a></li>
+                    {% if page_no > 2 %}
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_no - 2 }}">{{ page_no - 2 }}</a></li>
                     {% endif %}
-                    {% if page_no<page_total %} <li class="page-item"><a class="page-link"
-                            href="?keyword={{ keyword }}&page={{ page_no+1 }}">{{ page_no+1 }}</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="?keyword={{ keyword }}&page={{ page_no+1 }}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link"
-                                href="?keyword={{ keyword }}&page={{ page_total }}">Last</a>
-                        </li>
-                        {% endif %}
+                    {% if page_no > 1 %}
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_no - 1 }}">{{ page_no - 1 }}</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ page_no }}</a></li>
+                    {% if page_no < page_total %}
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_no + 1 }}">{{ page_no + 1 }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total - 1 %}
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_no + 2 }}">{{ page_no + 2 }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total - 2 %}
+                    <li class="page-item"><span class="page-link">...</span></li>
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_total }}">{{ page_total }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total %}
+                    <li class="page-item">
+                        <a class="page-link" href="?keyword={{ keyword }}&page={{ page_no + 1 }}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="?keyword={{ keyword }}&page={{ page_total }}">Last</a></li>
+                    {% endif %}
                 </ul>
+            </div>
+            
             </div>
 
         </div>

@@ -1,6 +1,7 @@
 import { data } from "./data.js";
 
 const codeSelect = document.getElementById("code");
+const codeSearchSelect = document.getElementById("codesearch");
 const bookSelect = document.getElementById("book");
 const titleSelect = document.getElementById("title");
 const chapterSelect = document.getElementById("chapter");
@@ -64,6 +65,7 @@ codeSelect.addEventListener("change", () => {
   populateNextSelect(codeSelect, bookSelect, 1);
 });
 
+
 bookSelect.addEventListener("change", () => {
   titleSelect.innerHTML = "";
   chapterSelect.innerHTML = "";
@@ -77,6 +79,8 @@ titleSelect.addEventListener("change", () => {
 
 // Initialize the code select
 populateSelect(codeSelect, [...new Set(data.map((row) => row[0]))]);
+populateSelect(codeSearchSelect, [...new Set(data.map((row) => row[0]))]);
+
 
 document.getElementById("code").addEventListener("change", function () {
   var codeSelect = document.getElementById("code");
@@ -98,8 +102,9 @@ function setSelectValue(selectElement, value) {
     }
   }
 }
-console.log(codeValue)
+
 console.log(codeSelect)
+
 if (codeValue != null) {
   setSelectValue(codeSelect, codeValue);
   populateNextSelect(codeSelect, bookSelect, 1);
