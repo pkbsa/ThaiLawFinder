@@ -51,6 +51,15 @@ def connect_to_db():
 def index():
     return render_template('index.html')
 
+@app.route('/docs')
+def docs():
+    db = connect_to_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM law")
+    law_data = cursor.fetchall()
+    db.close()    
+    return render_template('docs.html', rows=law_data)
+
 
 @app.route('/search')
 def search():
@@ -68,7 +77,6 @@ def search():
                 'match_all': {}
             }
         }
-
     else:
         body = {
             'size': page_size,
@@ -138,7 +146,7 @@ def advancedSearch():
     if section:
         should_conditions.append({"match": {"section": section}})
 
-    if keyword and keyword.strip():
+    if keyword and keyword.strip(): 
         should_conditions.append({"match": {"detail": keyword}})
 
     print(should_conditions)

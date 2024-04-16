@@ -1,7 +1,6 @@
 import pymysql
 import time
 import requests
-import json
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
