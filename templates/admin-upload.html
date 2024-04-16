@@ -104,6 +104,13 @@
                 e.preventDefault();
                 document.getElementById('fileUpload').files = fileInput.files;
                 var formData = new FormData(this);
+                filedata = `
+                    <p> Uploading file </p>
+                        <div id="myProgress">
+                        <div id="myBar"></div>
+                    </div>`
+                        dropArea.innerHTML = filedata;
+                        move();
                 $.ajax({
                     type: 'POST',
                     url: '/upload',
@@ -112,17 +119,11 @@
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        filedata = `
-                    <p> Converting file </p>
-                        <div id="myProgress">
-                        <div id="myBar"></div>
-                    </div>`
-                        dropArea.innerHTML = filedata;
-                        move();
+                       
                         setTimeout(() => {
                             filedata = `
                      ${data}`
-                            dropArea.innerHTML = filedata;
+                            dropArea.innerHTML = filedata + `</br><button class="btn btn-secondary mt-2" onclick='window.location.href="/admin-upload"'>Upload Another</button>`;
                         }, 2000);
 
                     },
@@ -184,7 +185,7 @@
             table.innerHTML = '';
 
             var startIndex = (page - 1) * rowsPerPage;
-            var endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+            var endIndex = Math.min(startIndex + rowsPerPage, totalRows) + 1;
 
             // Add the header row
             if (data.length > 0) {
@@ -196,7 +197,7 @@
                 }
             }
 
-            for (var i = startIndex + 1; i < endIndex; i++) {
+            for (var i = startIndex+1; i < endIndex; i++) {
                 var cells = data[i];
                 var row = table.insertRow(-1);
 

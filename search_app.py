@@ -115,7 +115,10 @@ def search():
 @app.route('/advanced-search')
 def advancedSearch():
     page_size = 5
-    keyword = request.args.get('keyword')
+    keyword = ""
+
+    if request.args.get('keyword'):
+        keyword = request.args.get('keyword')    
     section = request.args.get('section')
     code = request.args.get('code')
     book = request.args.get('book')
@@ -183,9 +186,10 @@ def advancedSearch():
 
 def get_codes(es, index_name):
     # Get unique codes from the Elasticsearch index
-    result = es.search(index=index_name, size=0, body={"aggs": {"codes": {"terms": {"field": "code.raw"}}}})
+    result = es.search(index=index_name, size=0, body={"aggs": {"codes": {"terms": {"field": "code.raw", "size": 10000}}}})
     codes = [{"key": bucket['key'], "doc_count": bucket['doc_count']} for bucket in result['aggregations']['codes']['buckets']]
     return codes
+
 
 
 @app.route('/dashboard')
@@ -197,6 +201,7 @@ def dashboard():
     db.close()
 
     codes = get_codes(es, existing_index_name)
+    print(codes)
     
     return render_template('admin-dashboard.html', codes=codes, law_data=law_data)
 
@@ -302,6 +307,25 @@ def upload_csv():
 
         return 'File uploaded and data inserted into database/elastic successfully'
 
+@app.route('/upload-elastic', methods=['POST'])
+def upload_to_elastic_only():
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        csv_data = uploaded_file.stream.read().decode('utf-8')
+        add_csv_to_index(es, existing_index_name, csv_data)
+    return 'File uploaded and data inserted into database/elastic successfully'
+
+@app.route('/delete-elastic', methods=['POST'])
+def delete_from_elastic():
+    try:
+        code_to_delete = request.form.get('code')
+        delete_data_by_code(es, existing_index_name, code_to_delete)
+        time.sleep(1)
+
+        return redirect(url_for('dashboard'))
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/download')
 def download_file():

@@ -225,64 +225,14 @@
     </div>
 
 
-    <div class="modal" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="previewModalLabel">CSV Data Preview</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table id="previewTable" class="table">
-                        <!-- Preview table content will be added dynamically using JavaScript -->
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Add Bootstrap JS and Popper.js scripts here -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
-        function previewCSV() {
-            var input = document.getElementById('csvFile');
-            var file = input.files[0];
-
-            if (file) {
-                var reader = new FileReader();
-                reader.readAsText(file);
-
-                reader.onload = function (e) {
-                    var csvData = e.target.result;
-                    var rows = csvData.split('\n');
-                    var table = document.getElementById('previewTable');
-                    table.innerHTML = '';
-
-                    for (var i = 0; i < Math.min(rows.length, 5); i++) {
-                        var cells = rows[i].split(',');
-                        var row = table.insertRow(-1);
-
-                        for (var j = 0; j < cells.length; j++) {
-                            var cell = row.insertCell(-1);
-                            cell.innerHTML = cells[j];
-                        }
-                    }
-
-                    // Show the modal
-                    $('#previewModal').modal('show');
-                };
-            }
-        }
-    </script>
+    
     <script>
         window.onload = async function () {
             await updateTableData();

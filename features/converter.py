@@ -157,8 +157,10 @@ def process_file(param_code):
                     pending_replacements['chapter'] = '-'
                 elif '\nบทเฉพาะกาล' in detail:
                     parts = detail.split('\nบทเฉพาะกาล', 1)
-                    pending_replacements['title'] = '-'
+                    print("บทเฉพาะกาล")
+                    pending_replacements['title'] = '-  '
                     pending_replacements['chapter'] = 'บทเฉพาะกาล'
+                detail = parts[0]
                 pending_replacements['part'] = '-'
                 pending_replacements['addtitional'] = '-'
                 if '\nหมวดที่ ' in parts[1] or '\nหมวด ' in parts[1]:
