@@ -66,17 +66,17 @@
 
                 <div id="previewContainer" style="display: none;" class="text-center">
                     <div id="pagination" class="mt-4 mb-3">
-                        <button class="btn btn-primary" onclick="prevPage()">Previous Page</button>
+                        <button class="btn btn-primary" onclick="prevPage()" type="button">Previous Page</button>
                         <span class="pageInfo" class="mx-2">Page 1 of 1</span>
-                        <button class="btn btn-primary" onclick="nextPage()">Next Page</button>
+                        <button class="btn btn-primary" onclick="nextPage()" type="button">Next Page</button>
                     </div>
                     <table id="previewTable" class="table">
                         <!-- Preview table content will be added dynamically using JavaScript -->
                     </table>
                     <div id="pagination" class="mt-4 mb-3">
-                        <button class="btn btn-primary" onclick="prevPage()">Previous Page</button>
+                        <button class="btn btn-primary" onclick="prevPage()" type="button">Previous Page</button>
                         <span class="pageInfo" class="mx-2">Page 1 of 1</span>
-                        <button class="btn btn-primary" onclick="nextPage()">Next Page</button>
+                        <button class="btn btn-primary" onclick="nextPage()" type="button">Next Page</button>
                     </div>
                 </div>
 
@@ -128,7 +128,11 @@
 
                     },
                     error: function (data) {
-                        alert("Error occurred.");
+                        setTimeout(() => {
+                            filedata = `
+                     ${data}`
+                            dropArea.innerHTML = filedata + `</br><button class="btn btn-secondary mt-2" onclick='window.location.href="/admin-upload"'>Reupload</button>`;
+                        }, 2000);
                         console.log(data);
                     }
                 });

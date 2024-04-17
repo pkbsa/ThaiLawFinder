@@ -61,3 +61,6 @@ nav img{
     -webkit-box-shadow: none;
     box-shadow: none!important;
 }
+.grey{
+    color: grey;
+}

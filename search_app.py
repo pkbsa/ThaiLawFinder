@@ -107,9 +107,10 @@ def search():
              'part': doc['_source']['part'], 'addtitional': doc['_source']['addtitional'],
              'detail': doc['_source']['detail']} for doc in res['hits']['hits']]
 
+    total_hits = res['hits']['total']['value']  # Calculate total hits
     page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total)
+    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total, total_hits=total_hits)
 
 
 @app.route('/advanced-search')
@@ -176,12 +177,14 @@ def advancedSearch():
                 'title': doc['_source']['title'], 'chapter': doc['_source']['chapter'],
                  'part': doc['_source']['part'], 'addtitional': doc['_source']['addtitional'],
                  'detail': doc['_source']['detail']} for doc in res['hits']['hits']]
+        
+        total_hits = res['hits']['total']['value']  # Calculate total hits
 
         page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword)
+        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=total_hits)
     else:
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword)
+        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=0)
 
 
 def get_codes(es, index_name):

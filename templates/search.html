@@ -83,7 +83,7 @@
 
                             <div class="input-group mt-3 mb-3">
                                 <label class="input-group-text" for="keyword">คำค้นหา</label>
-                                <input  class="form-control" id="keyword" name="keyword">
+                                <input  class="form-control" id="keyword" name="keyword" value="{{ keyword }}">
                                 </select>
                             </div>
 
@@ -116,7 +116,10 @@
                 </div>
             </div>
             <div class="col-sm-12 col-md-8 col-lg-9">
-                <div class="d-flex justify-content-end mb-3 mt-3">
+                <div class="d-flex justify-content-between mb-3 mt-3 align-items-end">
+                    <p class="m-0 grey">
+                        พบ {{ total_hits }} รายการ ใน {{ page_total }} หน้า
+                    </p>
                     <div class="btn-group">
                         <button type="button" class="btn filter dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
