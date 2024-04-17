@@ -65,3 +65,6 @@ nav img{
     margin-right: 10px;
     margin-bottom: 4px;
 }
+.suggest a{
+    text-decoration: none;
+}

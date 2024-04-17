@@ -135,7 +135,6 @@ def advancedSearch():
 
     should_conditions = []
     print(code)
-    
 
     if code and code.strip():  
         should_conditions.append({"match_phrase": {"code": code}})
@@ -186,14 +185,11 @@ def advancedSearch():
     else:
         return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=0)
 
-
 def get_codes(es, index_name):
     # Get unique codes from the Elasticsearch index
     result = es.search(index=index_name, size=0, body={"aggs": {"codes": {"terms": {"field": "code.raw", "size": 10000}}}})
     codes = [{"key": bucket['key'], "doc_count": bucket['doc_count']} for bucket in result['aggregations']['codes']['buckets']]
     return codes
-
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -207,15 +203,6 @@ def dashboard():
     print(codes)
     
     return render_template('admin-dashboard.html', codes=codes, law_data=law_data)
-
-@app.route('/info/<name>')
-def get_status(name):
-    db = connect_to_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM law WHERE name = %s", (name,))
-    status = cursor.fetchone()
-    db.close()
-    return {'results': status}
 
 @app.route('/admin-convert')
 def dashboardHTML():
@@ -333,3 +320,9 @@ def delete_from_elastic():
 @app.route('/download')
 def download_file():
     return send_file('static/output.csv', as_attachment=True)
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return redirect('/')
+
