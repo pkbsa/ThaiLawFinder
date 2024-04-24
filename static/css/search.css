@@ -64,3 +64,8 @@ nav img{
 .grey{
     color: grey;
 }
+.word-advisor span{
+    font-size: 0.9em;
+    padding: 0.5em;
+    margin: 0.2em;
+}

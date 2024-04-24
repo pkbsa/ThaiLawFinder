@@ -24,8 +24,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                 
-                    
+
+
 
                 </ul>
                 <form method="GET" action="{{ url_for('search') }}">
@@ -66,7 +66,8 @@
                     <span class="m-2 nav-head">Pagination</span>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="https://www.ocs.go.th/council-of-state/#/public/browse">Krisdika</a>
+                            <a class="nav-link" href="https://www.ocs.go.th/council-of-state/#/public/browse">STEP 1 :
+                                Krisdika</a>
                         </li>
                     </ul>
                 </li>
@@ -74,10 +75,10 @@
                     <span class="m-2 nav-head">Features</span>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin-convert">Convert File</a>
+                            <a class="nav-link" href="/admin-convert">STEP 2: Convert File</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin-upload">Upload Information</a>
+                            <a class="nav-link" href="/admin-upload">STEP 3: Upload Information</a>
                         </li>
                     </ul>
                 </li>
@@ -141,25 +142,88 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-4">
-                        <div class="card p-4 h-100">
-                            <canvas id="myChart"></canvas>
+                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-2">
+                        <div class="card p-4">
+                            <canvas id="myPieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-2">
+                        <div class="card p-4">
+                            <canvas id="myPramuanChart"></canvas>
+                            <canvas id="myPorrorborChart"></canvas>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6 col-lg-6 mt-3 p-2 mb-4 row justify-content-space-between">
-                        <div class="card p-4 update">
-                            <p id="update">ไฟล์ที่ต้อง Update !!!</p>
-                            <textarea class="form-control h-100 mt-2" placeholder="" id="floatingTextarea2" disabled style="height: 100px"></textarea>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body row p-3">
+                                <h5>Basic Search Boost</h5>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-2 mt-1">
+                                            <label for="code" class="form-label">Code</label>
+                                            <input type="number" class="form-control" id="code" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CODE'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="book" class="form-label">Book</label>
+                                            <input type="number" class="form-control" id="book" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_BOOK'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="chapter" class="form-label">Chapter</label>
+                                            <input type="number" class="form-control" id="chapter" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CHAPTER'] }}">
+                                        </div>
+                                       
+
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-2 mt-1">
+                                            <label for="section" class="form-label">Section</label>
+                                            <input type="number" class="form-control" id="section" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_SECTION'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="title" class="form-label">Title</label>
+                                            <input type="number" class="form-control" id="title" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_TITLE'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="part" class="form-label">Part</label>
+                                            <input type="number" class="form-control" id="part" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_PART'] }}">
+                                        </div>
+
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="mb-2 mt-1">
+                                    <label for="detail" class="form-label">Detail</label>
+                                    <input type="number" class="form-control" id="detail" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_DETAIL'] }}">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary mt-2">Save</button>
+                            </div>
                         </div>
-                        <div class="card p-4 mt-2">
-                            <button onclick='window.location.href="https://www.ocs.go.th/council-of-state/#/public/browse"' class="step" style="background-color: #8F9FB8;">STEP 1 : GET LAW INFORMATION</button>
-                        </div>
-                        <div class="card p-4 mt-2">
-                            <button onclick='window.location.href="/admin-convert"' class="step" style="background-color: #1265EE;">STEP 2 : CONVERT FILE</button>
-                        </div>
-                        <div class="card p-4 mt-2">
-                            <button onclick='window.location.href="/admin-upload"' class="step" style="background-color: #2BCE89;">STEP 3 : UPLOAD INFORMATION</button>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                        <div class="card">
+                            <div class="card-body row p-3">
+                                <h5>Word Advisor</h5>
+                                <div class="mb-2 mt-1">
+                                    <label for="threshold" class="form-label">Threshold</label>
+                                    <input type="number" class="form-control" id="threshold" placeholder="0.0" value="{{ config_setting['WORD_ADVISOR_THRESHOLD'] }}">
+                                </div>
+                                <div class="mb-2 mt-1">
+                                    <label for="maxword" class="form-label">Max word (Tokenize)</label>
+                                    <input type="number" class="form-control" id="maxword" placeholder="3" value="{{ config_setting['WORD_ADVISOR_MAX_EACH_WORD'] }}">
+                                </div>
+                                <div class="mb-2 mt-1">
+                                    <label for="maxword" class="form-label">Max word (Total)</label>
+                                    <input type="number" class="form-control" id="maxword" placeholder="3" value="{{ config_setting['WORD_ADVISOR_MAX_WORD'] }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save</button>
+                            </div>
                         </div>
                     </div>
 
@@ -171,7 +235,8 @@
                 <div class="card mt-3 p-2 mb-5">
 
                     <!-- Upload CSV Form -->
-                    <input type="text" id="myInput" class="form-control mt-1 mb-2" onkeyup="myFunction()" placeholder="Search for names..">
+                    <input type="text" id="myInput" class="form-control mt-1 mb-2" onkeyup="myFunction()"
+                        placeholder="Search for names..">
 
                     <table class="table table-striped table-hover" id="myTable">
                         <thead>
@@ -227,34 +292,34 @@
     </div>
 
 
-    
+
 
     <!-- Add Bootstrap JS and Popper.js scripts here -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    
+
     <script>
         window.onload = async function () {
             await updateCountData();
             updateTableData();
         };
-    
+
         function updateTableData() {
             const table = document.getElementById('myTable');
             const rows = table.rows;
-    
+
             for (let i = 1; i < rows.length; i++) { // start from 1 to skip the header row
                 const cells = rows[i].cells;
                 const name = cells[1].textContent; // assuming name is in the second column
                 const lawEntry = findLawData(name);
-                
+
                 if (lawEntry) {
-                    cells[3].textContent = lawEntry[2]; 
-                    cells[4].textContent = lawEntry[3]; 
+                    cells[3].textContent = lawEntry[2];
+                    cells[4].textContent = lawEntry[3];
                     cells[5].textContent = lawEntry[4];
-    
+
                     if (lawEntry[5] == 1) {
                         cells[1].innerHTML = `<span class="badge text-bg-success m-1">ฉบับล่าสุด</span>` + cells[1].innerHTML;
                     } else {
@@ -263,7 +328,7 @@
                 }
             }
         }
-    
+
         function findLawData(name) {
             const lawDataArray = JSON.parse('{{ law_data | tojson | safe }}');
             return lawDataArray.find(entry => entry[1] === name);
@@ -284,80 +349,119 @@
 
         function countOccurrences(dataArray) {
             let countPramuan = 0;
+            let countPramuanUptoDated = 0;
+            let countPramuanOutdated = 0;
             let countPorrorbor = 0;
+            let countPorrorborUptoDated = 0;
+            let countPorrorborOutdated = 0;
             for (const entry of dataArray) {
                 if (entry[1].includes("ประมวล")) {
                     countPramuan++;
-                }else{
+                    if (entry[5] == 1) {
+                        countPramuanUptoDated++;
+                    } else {
+                        countPramuanOutdated++;
+                    }
+                } else {
+                    if (entry[5] == 1) {
+                        countPorrorborUptoDated++;
+                    } else {
+                        countPorrorborOutdated++;
+                    }
                     countPorrorbor++
                 }
             }
-            return { countPramuan,countPorrorbor };
+            return { countPramuan, countPorrorbor, countPramuanUptoDated, countPramuanOutdated, countPorrorborUptoDated, countPorrorborOutdated };
         }
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const lawDataArray = JSON.parse('{{ law_data | tojson | safe }}');
-        const { countPramuan, countPorrorbor } = countOccurrences(lawDataArray);
-        console.log(countPramuan, countPorrorbor);
+        const { countPramuan, countPorrorbor, countPramuanUptoDated, countPramuanOutdated, countPorrorborUptoDated, countPorrorborOutdated } = countOccurrences(lawDataArray);
 
-        const data = {
-            labels: [
-                'ประมวลกฎหมาย',
-                'พระราชบัญญัติ',
-                'คำพิพากษาศาลฎีฏา'
-            ],
-            datasets: [{
-                data: [countPramuan, countPorrorbor, 0],
-                backgroundColor: [
-                    'rgb(255, 205, 86)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 99, 132)',
+        const myPieChart = document.getElementById('myPieChart');
+        const myPramuanChart = document.getElementById('myPramuanChart');
+        const myPorrorborChart = document.getElementById('myPorrorborChart');
 
-                ],
-                hoverOffset: 4
-            }]
-        };
+        new Chart(myPieChart, {
+            type: 'doughnut',
+            data: {
+                labels: ['ประมวลกฎหมาย', 'พระราชบัญญัติ'],
+                datasets: [{
+                    label: 'กฎหมายในระบบ',
+                    data: [countPramuan, countPorrorbor],
+                    backgroundColor: [
+                        '#88C79B',
+                        '#504177',
 
-        const ctx = document.getElementById('myChart');
+                    ],
+                    hoverOffset: 4
+                }]
+            },
 
-        new Chart(ctx, {
-            type: 'polarArea',
-            data: data,
+        });
+
+        new Chart(myPramuanChart, {
+            type: 'bar',
+            data: {
+                labels: ['Up-to-Dated', 'Outdated'],
+                datasets: [{
+                    label: 'ประมวลกฎหมาย',
+                    data: [countPramuanUptoDated, countPramuanOutdated],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                }
+                indexAxis: 'y',
+            }
+        });
+        new Chart(myPorrorborChart, {
+            type: 'bar',
+            data: {
+                labels: ['Up-to-Dated', 'Outdated'],
+                datasets: [{
+                    label: 'พระราชบัญญัติ',
+                    data: [countPorrorborUptoDated, countPorrorborOutdated],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
             }
         });
     </script>
 
-<script>
-    function myFunction() {
-      // Declare variables
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("myInput");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("myTable");
-      tr = table.getElementsByTagName("tr");
-    
-      // Loop through all table rows, and hide those who don't match the search query
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
+    <script>
+        function myFunction() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
-      }
-    }
     </script>
 
 </body>

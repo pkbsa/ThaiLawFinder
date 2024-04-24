@@ -8,3 +8,5 @@
 # Ignore virtual environment directories
 venv/
 env/
+
+features/thai2vec.bin

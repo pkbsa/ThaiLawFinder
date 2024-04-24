@@ -5,26 +5,35 @@ from flask import render_template
 from elasticsearch import Elasticsearch
 import math
 import time
-
+import json
 
 from flask import send_file
 import mysql.connector
 
-from features import converter
-from features import content
+from features import converter, tableofcontent, word_advisor
 
-# ELASTIC_PASSWORD = ""
+ELASTIC_PASSWORD = ""
 
-# existing_index_name = 'law-data-reindex-1'
+es = Elasticsearch("http://localhost:9200",
+                 http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
 
-# es = Elasticsearch("http://localhost:9200",
-#                  http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
+# ELASTIC_PASSWORD = "ppfBW5a5bFGDw7W7v0QqgsdC"
 
-ELASTIC_PASSWORD = "ppfBW5a5bFGDw7W7v0QqgsdC"
+# es = Elasticsearch(['https://97652710d0b74c249f19a27b3ef4a111.ap-southeast-1.aws.found.io:443'], http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
 
 existing_index_name = 'law-data-reindex'
 
-es = Elasticsearch(['https://97652710d0b74c249f19a27b3ef4a111.ap-southeast-1.aws.found.io:443'], http_auth=("elastic", ELASTIC_PASSWORD), verify_certs=False)
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+BASIC_SEARCH_BOOST_CODE = config['BASIC_SEARCH_BOOST_CODE']
+BASIC_SEARCH_BOOST_SECTION = config['BASIC_SEARCH_BOOST_SECTION']
+BASIC_SEARCH_BOOST_BOOK = config['BASIC_SEARCH_BOOST_BOOK']
+BASIC_SEARCH_BOOST_TITLE = config['BASIC_SEARCH_BOOST_TITLE']
+BASIC_SEARCH_BOOST_CHAPTER = config['BASIC_SEARCH_BOOST_CHAPTER']
+BASIC_SEARCH_BOOST_PART = config['BASIC_SEARCH_BOOST_PART']
+BASIC_SEARCH_BOOST_DETAIL = config['BASIC_SEARCH_BOOST_DETAIL']
+
 
 app = Flask(__name__)
 
@@ -69,6 +78,8 @@ def search():
     sort = request.args.get('sort', 'section')
     order = request.args.get('order', 'asc')
 
+    advised_word = word_advisor.findSimilarity(keyword)
+
     if not keyword.strip() :
         body = {
             'size': page_size,
@@ -84,14 +95,14 @@ def search():
             'query': {
                 'bool': {
                     'should': [
-                        {'match': {'code': {'query': keyword, 'boost': 1.5}}},  
-                        {'match': {'section': {'query': keyword, 'boost': 2.0}}},
-                        {'match': {'book': keyword}},
-                        {'match': {'title': keyword}},
-                        {'match': {'chapter': keyword}},
-                        {'match': {'part': keyword}},
+                        {'match': {'code': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_CODE}}},  
+                        {'match': {'section': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_SECTION}}},
+                        {'match': {'book': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_BOOK}}},
+                        {'match': {'title': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_TITLE}}},
+                        {'match': {'chapter': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_CHAPTER}}},
+                        {'match': {'part': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_PART}}},
                         {'match': {'addtitional': keyword}},
-                        {'match': {'detail': keyword}}
+                        {'match': {'detail': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_DETAIL}}}
                     ]
                 }
             }
@@ -110,16 +121,19 @@ def search():
     total_hits = res['hits']['total']['value']  # Calculate total hits
     page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total, total_hits=total_hits)
+    return render_template('search.html', keyword=keyword, hits=hits, page_no=page_no, page_total=page_total, total_hits=total_hits, advised_word=advised_word)
 
 
-@app.route('/advanced-search')
-def advancedSearch():
+@app.route('/parametric-search')
+def parametricSearch():
     page_size = 5
     keyword = ""
+    advised_word = []
 
     if request.args.get('keyword'):
-        keyword = request.args.get('keyword')    
+        keyword = request.args.get('keyword') 
+        advised_word = word_advisor.findSimilarity(keyword)
+
     section = request.args.get('section')
     code = request.args.get('code')
     book = request.args.get('book')
@@ -181,9 +195,9 @@ def advancedSearch():
 
         page_total = math.ceil(res['hits']['total']['value'] / page_size)
 
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=total_hits)
+        return render_template('parametric-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=total_hits, advised_word=advised_word)
     else:
-        return render_template('advanced-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=0)
+        return render_template('parametric-search.html', code=code, book=book, title=title, chapter=chapter, hits=hits, page_no=page_no, page_total=page_total, keyword=keyword, total_hits=0, advised_word=advised_word)
 
 def get_codes(es, index_name):
     # Get unique codes from the Elasticsearch index
@@ -200,9 +214,8 @@ def dashboard():
     db.close()
 
     codes = get_codes(es, existing_index_name)
-    print(codes)
     
-    return render_template('admin-dashboard.html', codes=codes, law_data=law_data)
+    return render_template('admin-dashboard.html', codes=codes, law_data=law_data, config_setting=config)
 
 @app.route('/admin-convert')
 def dashboardHTML():
@@ -225,7 +238,7 @@ def delete_data():
         cursor.execute("DELETE FROM law WHERE name = %s", (code_to_delete,))
         db.commit() 
         db.close()
-        content.removeContent(code_to_delete)
+        tableofcontent.removeContent(code_to_delete)
         time.sleep(1)
 
         return redirect(url_for('dashboard'))
@@ -293,7 +306,7 @@ def upload_csv():
         csv_data = uploaded_file.stream.read().decode('utf-8')
         add_csv_to_index(es, existing_index_name, csv_data)
 
-        content.addContent(csv_data)
+        tableofcontent.addContent(csv_data)
 
         return 'File uploaded and data inserted into database/elastic successfully'
 

@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Search Engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/search.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@200;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../static/img/logo.ico">
+</head>
+
+<body>
+    <nav class="navbar justify-content-center">
+        <div class="row p-3 mt-2 mb-2 w-100">
+            <div class="col-sm-12 col-md-4 col-lg-3 d-flex justify-content-center align-items-center">
+                <img src="../static/img/logo.png">
+                <a href="/">Thai Law Finder</a>
+            </div>
+            <div class="col-sm-12 col-md-7 col-lg-8 mt-2 mt-md-0 mt-lg-0">
+                <form method="GET" action="{{ url_for('search') }}" class="w-100">
+                    <div class="row ">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="col-3"> <!-- Adjust the column width as needed -->
+                                    <select class="form-select me-2" id="inputGroupSelect02">
+                                        <option selected value="1">ประมวลกฎหมาย / พรบ.</option>
+                                    </select>
+                                </div>
+                                <div class="col"> <!-- Adjust the column width as needed -->
+                                    <input id="searchBox" type="text" name="keyword" class="form-control"
+                                        placeholder="Section, Keyword..." value="{{ keyword }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </nav>
+
+
+    <div class="container mt-sm-2 mb-5 px-5">
+        <div class="row">
+            <div class="mt-5 col-sm-12 col-md-4 col-lg-3">
+                <div class="card w-100 mb-3 mt-3">
+                    <div class="card-body">
+                        <form method="GET" action="{{ url_for('parametricSearch') }}">
+                            <h5 class="card-title">Parametric
+                                Search</h5>
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="code">ประมวล</label>
+                                <select class="form-select" id="code" name="code">
+                                    <option value="1">อาญา</option>
+                                    <option value="2">แพ่ง</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="book">ภาค</label>
+                                <select class="form-select" id="book" name="book">
+
+                                </select>
+                            </div>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="title">ลักษณะ</label>
+                                <select class="form-select" id="title" name="title">
+                                </select>
+                            </div>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="chapter">หมวด</label>
+                                <select class="form-select" id="chapter" name="chapter">
+                                </select>
+                            </div>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="keyword">คำค้นหา</label>
+                                <input  class="form-control" id="keyword" name="keyword" value="{{ keyword }}">
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card w-100 mb-3 mt-3 ">
+                    <form method="GET" action="{{ url_for('parametricSearch') }}">
+                        <div class="card-body">
+                            <h5 class="card-title">Search By มาตรา</h5>
+
+                            <div class="input-group mt-3 mb-3">
+                                <label class="input-group-text" for="code">ประมวล</label>
+                                <select class="form-select" id="codesearch" name="code">
+                                    <option value="อาญา">อาญา</option>
+                                    <option value="แพ่ง">แพ่ง</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group mt-3 mb-3">
+                                <span class="input-group-text">มาตรา</span>
+                                <input type="text" class="form-control" name="section" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+                {% if advised_word %}
+                <div class="card w-100 mb-3 mt-3 word-advisor">
+                    <div class="card-body">
+                        <h5 class="card-title">Word Advisor</h5>
+                        {% for word in advised_word %}
+                        <span class="badge text-bg-secondary">{{ word }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+            </div>
+            <div class="col-sm-12 col-md-8 col-lg-9">
+                <div class="d-flex justify-content-between mb-3 mt-3 align-items-end">
+                    <p class="m-0 grey">
+                        พบข้อมูล {{ total_hits }} รายการ ใน {{ page_total }} หน้า
+                    </p>
+                    <div class="btn-group">
+                        <button type="button" class="btn filter dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fa fa-sort-amount-asc" aria-hidden="true"></i>
+                            Sort By
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                    href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&page={{ page_no }}&&sort=relevant">Relevant</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&page={{ page_no }}&&sort=code&order=asc">Section
+                                    (Ascending)</a></li>
+                            <li><a class="dropdown-item"
+                                    href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&page={{ page_no }}&&sort=code&order=desc">Section
+                                    (Descending) </a></li>
+                        </ul>
+                    </div>
+                </div>
+                {% if hits|length == 0 %}
+                <h5>ไม่พบข้อมูล ใน ระบบฐานข้อมูล</h5>
+                {% endif %}
+                {% for doc in hits %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        {{ doc['code'] }}  {{ doc['section'] }}
+                    </div>
+                    <div class="card-body">
+                        {% if doc['book'] != '-' %}
+                        <h5 class="card-title">
+                            {% if doc['code'] != 'แพ่งและพาณิชย์' %}
+                            ภาค :
+                            {% else %}
+                            บรรพ :
+                            {% endif %}
+                            {{ doc['book'] }}
+                            <a
+                                href="/parametric-search?code={{ doc['code'] }}&book={{ doc['book'] }}&title={{ title }}&chapter={{ chapter }}&page={{ 1 }}&&sort=relevant"><i
+                                    class="fa fa-link" aria-hidden="true"></i></a>
+                        </h5>
+                        {% endif %}
+                        {% if doc['title'] != '-' %}
+                        <h6 class="mt-2">ลักษณะ : {{ doc['title'] }}
+                            <a
+                                href="/parametric-search?code={{ doc['code'] }}&book={{ doc['book'] }}&title={{ doc['title'] }}&chapter={{ chapter }}&page={{ 1 }}&&sort=relevant"><i
+                                    class="fa fa-link" aria-hidden="true"></i></a>
+                        </h6>
+                        {% endif %}
+                        {% if doc['chapter'] != '-' %}
+                        <h6 class="mt-2">หมวด : {{ doc['chapter'] }}
+                            <a
+                                href="/parametric-search?code={{ doc['code'] }}&book={{ doc['book'] }}&title={{ doc['title'] }}&chapter={{ doc['chapter'] }}&page={{ 1 }}&&sort=relevant"><i
+                                    class="fa fa-link" aria-hidden="true"></i></a>
+                        </h6>
+                        {% endif %}
+                        <p class="card-text">{{doc['detail']}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_no != 1 %}
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page=1">First</a></li>
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no - 1 }}"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if page_no > 2 %}
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no - 2 }}">{{ page_no - 2 }}</a></li>
+                    {% endif %}
+                    {% if page_no > 1 %}
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no - 1 }}">{{ page_no - 1 }}</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ page_no }}</a></li>
+                    {% if page_no < page_total %}
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no + 1 }}">{{ page_no + 1 }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total - 1 %}
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no + 2 }}">{{ page_no + 2 }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total - 2 %}
+                    <li class="page-item"><span class="page-link">...</span></li>
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_total }}">{{ page_total }}</a></li>
+                    {% endif %}
+                    {% if page_no < page_total %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_no + 1 }}"
+                            aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link"
+                            href="?code={{ code }}&book={{ book }}&title={{ title }}&chapter={{ chapter }}&keyword={{ keyword }}&page={{ page_total }}">Last</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        var codeValue = '{{ code }}';
+        var bookValue = '{{ book }}';
+        var titleValue = '{{ title }}';
+        var chapterValue = '{{ chapter }}';
+    </script>
+    <script src="../static/js/parametric-search.js" type="module"> </script>
+
+</body>
+
+</html>
