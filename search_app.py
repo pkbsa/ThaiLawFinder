@@ -6,6 +6,7 @@ from elasticsearch import Elasticsearch
 import math
 import time
 import json
+import os
 
 from flask import send_file
 import mysql.connector
@@ -32,8 +33,12 @@ BASIC_SEARCH_BOOST_BOOK = config['BASIC_SEARCH_BOOST_BOOK']
 BASIC_SEARCH_BOOST_TITLE = config['BASIC_SEARCH_BOOST_TITLE']
 BASIC_SEARCH_BOOST_CHAPTER = config['BASIC_SEARCH_BOOST_CHAPTER']
 BASIC_SEARCH_BOOST_PART = config['BASIC_SEARCH_BOOST_PART']
+BASIC_SEARCH_BOOST_SUBPART = config['BASIC_SEARCH_BOOST_SUBPART']
 BASIC_SEARCH_BOOST_DETAIL = config['BASIC_SEARCH_BOOST_DETAIL']
 
+WORD_ADVISOR_THRESHOLD = config['WORD_ADVISOR_THRESHOLD']
+WORD_ADVISOR_MAX_EACH_WORD = config['WORD_ADVISOR_MAX_EACH_WORD']
+WORD_ADVISOR_MAX_WORD_TOTAL = config['WORD_ADVISOR_MAX_WORD_TOTAL']
 
 app = Flask(__name__)
 
@@ -101,7 +106,7 @@ def search():
                         {'match': {'title': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_TITLE}}},
                         {'match': {'chapter': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_CHAPTER}}},
                         {'match': {'part': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_PART}}},
-                        {'match': {'addtitional': keyword}},
+                        {'match': {'subpart': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_SUBPART}}},
                         {'match': {'detail': {'query': keyword, 'boost': BASIC_SEARCH_BOOST_DETAIL}}}
                     ]
                 }
@@ -115,7 +120,7 @@ def search():
     hits = [{'code': doc['_source']['code'], 'section': doc['_source']['section'],
              'book': doc['_source']['book'],
              'title': doc['_source']['title'], 'chapter': doc['_source']['chapter'],
-             'part': doc['_source']['part'], 'addtitional': doc['_source']['addtitional'],
+             'part': doc['_source']['part'], 'subpart': doc['_source']['subpart'],
              'detail': doc['_source']['detail']} for doc in res['hits']['hits']]
 
     total_hits = res['hits']['total']['value']  # Calculate total hits
@@ -188,7 +193,7 @@ def parametricSearch():
         hits = [{'code': doc['_source']['code'], 'section': doc['_source']['section'],
                  'book': doc['_source']['book'],
                 'title': doc['_source']['title'], 'chapter': doc['_source']['chapter'],
-                 'part': doc['_source']['part'], 'addtitional': doc['_source']['addtitional'],
+                 'part': doc['_source']['part'], 'subpart': doc['_source']['subpart'],
                  'detail': doc['_source']['detail']} for doc in res['hits']['hits']]
         
         total_hits = res['hits']['total']['value']  # Calculate total hits
@@ -214,6 +219,9 @@ def dashboard():
     db.close()
 
     codes = get_codes(es, existing_index_name)
+
+    with open('config.json', 'r') as f:
+        config = json.load(f)
     
     return render_template('admin-dashboard.html', codes=codes, law_data=law_data, config_setting=config)
 
@@ -262,7 +270,7 @@ def add_csv_to_index(es, index_name, csv_data):
             'title': row['title'],
             'chapter': row['chapter'],
             'part': row['part'],
-            'addtitional': row['addtitional'],
+            'subpart': row['subpart'],
             'detail': row['detail'],
             'section_sort': row['section_sort']
         }
@@ -333,6 +341,58 @@ def delete_from_elastic():
 @app.route('/download')
 def download_file():
     return send_file('static/output.csv', as_attachment=True)
+
+@app.route('/update-boost', methods=['POST'])
+def update_boost():
+    print(request.form)
+    # Get the form data
+    config_setting = {
+        'BASIC_SEARCH_BOOST_CODE': float(request.form.get('code')),
+        'BASIC_SEARCH_BOOST_BOOK': float(request.form.get('book')),
+        'BASIC_SEARCH_BOOST_CHAPTER': float(request.form.get('chapter')),
+        'BASIC_SEARCH_BOOST_SECTION': float(request.form.get('section')),
+        'BASIC_SEARCH_BOOST_TITLE': float(request.form.get('title')),
+        'BASIC_SEARCH_BOOST_PART': float(request.form.get('part')),
+        'BASIC_SEARCH_BOOST_SUBPART': float(request.form.get('subpart')),
+        'BASIC_SEARCH_BOOST_DETAIL': float(request.form.get('detail'))
+    }
+
+    # Load the existing config data
+    with open('config.json', 'r') as f:
+        config_data = json.load(f)
+
+    # Update the config data
+    config_data.update(config_setting)
+
+    # Write the updated config data back to the file
+    with open('config.json', 'w') as f:
+        json.dump(config_data, f, ensure_ascii=False)
+
+
+    # Redirect back to the dashboard
+    return redirect(url_for('dashboard'))
+
+@app.route('/update-wordadvisor', methods=['POST'])
+def update_wordadvisor():
+    # Get the form data
+    config_setting = {
+        'WORD_ADVISOR_THRESHOLD': float(request.form.get('threshold')),
+        'WORD_ADVISOR_MAX_EACH_WORD': int(request.form.get('maxword_each')),
+        'WORD_ADVISOR_MAX_WORD_TOTAL': int(request.form.get('maxword_total'))
+    }
+
+    # Load the existing config data
+    with open('config.json', 'r') as f:
+        config_data = json.load(f)
+
+    # Update the config data
+    config_data.update(config_setting)
+
+    # Write the updated config data back to a temporary file
+    with open('config.json', 'w') as f:
+        json.dump(config_data, f, ensure_ascii=False)
+
+    return redirect(url_for('dashboard'))
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

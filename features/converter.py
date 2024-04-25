@@ -58,7 +58,7 @@ def process_file(param_code):
     title = '-'
     chapter = '-'
     part = '-'
-    addtitional = '-'
+    subpart = '-'
 
     pending_replacements = {}
 
@@ -73,7 +73,7 @@ def process_file(param_code):
             title = '-'
             chapter = '-'
             part = '-'
-            addtitional = '-'
+            subpart = '-'
             if '\nลักษณะที่' in parts[1] or '\nลักษณะ' in parts[1]:
                 parts = parts[1].split('\nลักษณะที่', 1) if '\nลักษณะที่' in parts[1] else parts[1].split('\nลักษณะ', 1)
                 book = add_brackets_around_number(parts[0].strip()).replace('\n', ' ')
@@ -92,7 +92,7 @@ def process_file(param_code):
             title = add_brackets_around_number(parts[1].strip()).replace('\n', ' ')
             chapter = '-'
             part = '-'
-            addtitional = '-'
+            subpart = '-'
             if '\nหมวดที่' in parts[1] or '\nหมวด' in parts[1]:
                 parts = parts[1].split('\nหมวดที่', 1) if '\nหมวดที่' in parts[1] else parts[1].split('\nหมวด', 1)
                 title = add_brackets_around_number(parts[0].strip()).replace('\n', ' ')
@@ -106,7 +106,7 @@ def process_file(param_code):
             parts = text_before_match.split('\nหมวดที่', 1) if '\nหมวดที่' in text_before_match else text_before_match.split('\nหมวด', 1)
             chapter = add_brackets_around_number(parts[1].strip()).replace('\n', ' ')
             part = '-'
-            addtitional = '-'
+            subpart = '-'
             if '\nส่วนที่' in parts[1] or '\nส่วน' in parts[1]:
                 parts = parts[1].split('\nส่วนที่', 1) if '\nส่วนที่' in parts[1] else parts[1].split('\nส่วน', 1)
                 chapter = add_brackets_around_number(parts[0].strip()).replace('\n', ' ')
@@ -114,7 +114,7 @@ def process_file(param_code):
 
         elif '\nส่วนที่' in text_before_match or '\nส่วน' in text_before_match:
             part = add_brackets_around_number(text_before_match.split('\nส่วนที่', 1) if '\nส่วนที่' in text_before_match[1] else text_before_match[1].split('\nส่วน', 1)[1].strip()).replace('\n', ' ')
-            addtitional = '-'
+            subpart = '-'
 
     i = 0
     for match in re.finditer(pattern, input_text, re.DOTALL):
@@ -132,7 +132,7 @@ def process_file(param_code):
                 pending_replacements['title'] = '-'
                 pending_replacements['chapter'] = '-'
                 pending_replacements['part'] = '-'
-                pending_replacements['addtitional'] = '-'
+                pending_replacements['subpart'] = '-'
                 if '\nลักษณะที่ ' in parts[1] or '\nลักษณะ ' in parts[1]:
                     parts = parts[1].split('\nลักษณะที่', 1) if '\nลักษณะที่' in parts[1] else parts[1].split('\nลักษณะ', 1)
                     pending_replacements['book'] = add_brackets_around_number(parts[0].strip())
@@ -162,7 +162,7 @@ def process_file(param_code):
                     pending_replacements['chapter'] = 'บทเฉพาะกาล'
                 detail = parts[0]
                 pending_replacements['part'] = '-'
-                pending_replacements['addtitional'] = '-'
+                pending_replacements['subpart'] = '-'
                 if '\nหมวดที่ ' in parts[1] or '\nหมวด ' in parts[1]:
                     parts = parts[1].split('\nหมวดที่', 1) if '\nหมวดที่' in parts[1] else parts[1].split('\nหมวด', 1)
                     pending_replacements['title'] = add_brackets_around_number(parts[0].strip())
@@ -176,7 +176,7 @@ def process_file(param_code):
                 detail = parts[0]
                 pending_replacements['chapter'] = add_brackets_around_number(parts[1].strip())
                 pending_replacements['part'] = '-'
-                pending_replacements['addtitional'] = '-'
+                pending_replacements['subpart'] = '-'
                 if '\nส่วนที่ ' in parts[1] or '\nส่วน ' in parts[1]:
                     parts = parts[1].split('\nส่วนที่', 1) if '\nส่วนที่' in parts[1] else parts[1].split('\nส่วน', 1)
                     pending_replacements['chapter'] = add_brackets_around_number(parts[0].strip())
@@ -185,7 +185,7 @@ def process_file(param_code):
                 parts = detail.split('\nส่วนที่', 1) if '\nส่วนที่' in detail else detail.split('\nส่วน', 1)
                 detail = parts[0]
                 pending_replacements['part'] = add_brackets_around_number(parts[1].strip())
-                pending_replacements['addtitional'] = '-'
+                pending_replacements['subpart'] = '-'
                 
             if detail.startswith(word):
                 # Append the word to section and remove it from detail
@@ -196,8 +196,8 @@ def process_file(param_code):
         if "ผู้รับสนองพระบรมราชโองการ" in detail:
             detail = detail.split("ผู้รับสนองพระบรมราชโองการ")[0].strip()
             
-        data.append((code, section, book, title, chapter, part, addtitional, detail, i))
-        #print(code, section, book, title, chapter, part, addtitional, detail, i)
+        data.append((code, section, book, title, chapter, part, subpart, detail, i))
+        #print(code, section, book, title, chapter, part, subpart, detail, i)
         
         # Apply pending replacements in the next iteration
         if pending_replacements:
@@ -212,7 +212,7 @@ def process_file(param_code):
     # Write the data to a CSV file with UTF-8 encoding
     with open('static/output.csv', 'w', newline='', encoding='utf-8') as csv_file:
         csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(['code','section','book','title','chapter','part','addtitional', 'detail','section_sort'])  # Write header
+        csv_writer.writerow(['code','section','book','title','chapter','part','subpart', 'detail','section_sort'])  # Write header
         csv_writer.writerows(data)
 
     print("Data has been saved to 'output.csv'")

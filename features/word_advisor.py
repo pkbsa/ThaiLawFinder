@@ -10,9 +10,10 @@ def findSimilarity(sentence):
 
     with open('config.json', 'r') as f:
         config = json.load(f)
+        
     WORD_ADVISOR_THRESHOLD = config['WORD_ADVISOR_THRESHOLD']
     WORD_ADVISOR_MAX_EACH_WORD = config['WORD_ADVISOR_MAX_EACH_WORD']
-    WORD_ADVISOR_MAX_WORD = config['WORD_ADVISOR_MAX_WORD']
+    WORD_ADVISOR_MAX_WORD_TOTAL = config['WORD_ADVISOR_MAX_WORD_TOTAL']
 
     cutedSentence = word_tokenize(sentence, engine='deepcut')
 
@@ -26,11 +27,10 @@ def findSimilarity(sentence):
         count=0
         for WORD, THRESHOLD in similar:
             # print(l, k)
-            if THRESHOLD > WORD_ADVISOR_THRESHOLD and count <=WORD_ADVISOR_MAX_EACH_WORD and WORD not in choiceWord and maxword <= WORD_ADVISOR_MAX_WORD:
+            if THRESHOLD > WORD_ADVISOR_THRESHOLD and count <=WORD_ADVISOR_MAX_EACH_WORD and WORD not in choiceWord and maxword <= WORD_ADVISOR_MAX_WORD_TOTAL:
                 choiceWord.append(WORD)
                 count+=1
                 maxword+=1
-        # print("-----")
         print("choiceWord", choiceWord)
     return choiceWord
 

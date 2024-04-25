@@ -159,6 +159,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+                        <form action="/update-boost" method="POST">
+
                         <div class="card">
                             <div class="card-body row p-3">
                                 <h5>Basic Search Boost</h5>
@@ -166,15 +168,19 @@
                                     <div class="col-6">
                                         <div class="mb-2 mt-1">
                                             <label for="code" class="form-label">Code</label>
-                                            <input type="number" class="form-control" id="code" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CODE'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="code" name="code" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CODE'] }}">
                                         </div>
                                         <div class="mb-2 mt-1">
                                             <label for="book" class="form-label">Book</label>
-                                            <input type="number" class="form-control" id="book" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_BOOK'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="book" name="book" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_BOOK'] }}">
                                         </div>
                                         <div class="mb-2 mt-1">
                                             <label for="chapter" class="form-label">Chapter</label>
-                                            <input type="number" class="form-control" id="chapter" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CHAPTER'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="chapter" name="chapter" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_CHAPTER'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="subpart" class="form-label">SubPart</label>
+                                            <input type="number" step="0.01" class="form-control" id="addi" name="subpart" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_SUBPART'] }}">
                                         </div>
                                        
 
@@ -182,49 +188,54 @@
                                     <div class="col-6">
                                         <div class="mb-2 mt-1">
                                             <label for="section" class="form-label">Section</label>
-                                            <input type="number" class="form-control" id="section" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_SECTION'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="section" name="section" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_SECTION'] }}">
                                         </div>
                                         <div class="mb-2 mt-1">
                                             <label for="title" class="form-label">Title</label>
-                                            <input type="number" class="form-control" id="title" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_TITLE'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="title" name="title" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_TITLE'] }}">
                                         </div>
                                         <div class="mb-2 mt-1">
                                             <label for="part" class="form-label">Part</label>
-                                            <input type="number" class="form-control" id="part" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_PART'] }}">
+                                            <input type="number" step="0.01" class="form-control" id="part" name="part" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_PART'] }}">
+                                        </div>
+                                        <div class="mb-2 mt-1">
+                                            <label for="detail" class="form-label">Detail</label>
+                                            <input type="number" step="0.01" class="form-control" id="detail" name="detail" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_DETAIL'] }}">
                                         </div>
 
                                     </div>
                                     
 
                                 </div>
-                                <div class="mb-2 mt-1">
-                                    <label for="detail" class="form-label">Detail</label>
-                                    <input type="number" class="form-control" id="detail" placeholder="0.0" value="{{ config_setting['BASIC_SEARCH_BOOST_DETAIL'] }}">
-                                </div>
+                              
 
                                 <button type="submit" class="btn btn-primary mt-2">Save</button>
                             </div>
                         </div>
+                        </form>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                        <form action="/update-wordadvisor" method="POST">
+
                         <div class="card">
                             <div class="card-body row p-3">
                                 <h5>Word Advisor</h5>
                                 <div class="mb-2 mt-1">
                                     <label for="threshold" class="form-label">Threshold</label>
-                                    <input type="number" class="form-control" id="threshold" placeholder="0.0" value="{{ config_setting['WORD_ADVISOR_THRESHOLD'] }}">
+                                    <input type="number" step="0.01"  name="threshold" class="form-control" id="threshold" placeholder="0.0" value="{{ config_setting['WORD_ADVISOR_THRESHOLD'] }}">
                                 </div>
                                 <div class="mb-2 mt-1">
-                                    <label for="maxword" class="form-label">Max word (Tokenize)</label>
-                                    <input type="number" class="form-control" id="maxword" placeholder="3" value="{{ config_setting['WORD_ADVISOR_MAX_EACH_WORD'] }}">
+                                    <label for="maxword_each" class="form-label">Max word (Tokenize)</label>
+                                    <input type="number" name="maxword_each" class="form-control" id="maxword_each" placeholder="0" value="{{ config_setting['WORD_ADVISOR_MAX_EACH_WORD'] }}">
                                 </div>
                                 <div class="mb-2 mt-1">
                                     <label for="maxword" class="form-label">Max word (Total)</label>
-                                    <input type="number" class="form-control" id="maxword" placeholder="3" value="{{ config_setting['WORD_ADVISOR_MAX_WORD'] }}">
+                                    <input type="number" name="maxword_total" class="form-control" id="maxword_total" placeholder="0" value="{{ config_setting['WORD_ADVISOR_MAX_WORD_TOTAL'] }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-2">Save</button>
                             </div>
                         </div>
+                        </form>
                     </div>
 
                 </div>
